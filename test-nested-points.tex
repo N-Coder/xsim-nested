@@ -1,0 +1,163 @@
+\documentclass[a4paper]{article}
+
+\usepackage[verbose]{xsim}
+
+
+\DeclareExerciseEnvironmentTemplate{exe}{%
+    \subsection*{%
+        \XSIMmixedcase{\GetExerciseName}\nobreakspace
+        \GetExerciseProperty{counter}%
+        \normalfont%
+        \GetExercisePropertyT{subtitle}{ {\itshape\PropertyValue}}%
+        \nobreakspace(\GetExercisePropertyTF{points-sum}{\printgoal{\PropertyValue}}{???}~\XSIMtranslate {point-abbr})%
+        (ID \GetExerciseProperty{container}.\GetExerciseProperty{id})
+    }
+}{%
+    (ID \GetExerciseProperty{container}.\GetExerciseProperty{id} -- \GetExerciseProperty{points-sum}~\XSIMtranslate {point-abbr})
+}
+
+\DeclareExerciseEnvironmentTemplate{subexe}{%
+    \item[(\GetExerciseProperty{counter})] %
+    \GetExercisePropertyT{points}{%
+        (\printgoal{\PropertyValue}~\XSIMtranslate{point-abbr})%
+    } %
+    (ID \GetExerciseProperty{container} . \GetExerciseProperty{id})
+}{(/ID \GetExerciseProperty{container} . \GetExerciseProperty{id})}
+
+\DeclareExerciseType{subexercise}{
+    exercise-env = subexercise,
+    solution-env = subsolution,
+    exercise-name = Unterfrage,
+    solution-name = Unterantwort,
+    exercise-template = subexe,
+    solution-template = subexe
+}
+
+\DeclareExerciseType{subsubexercise}{
+    exercise-env = subsubexercise,
+    solution-env = subsubsolution,
+    exercise-name = Unterunterfrage,
+    solution-name = Unterunterantwort,
+    exercise-template = subexe,
+    solution-template = subexe
+}
+
+
+\xsimsetup{
+    exercise/template = exe,
+    solution/print = true,
+    %
+    subsolution/print = true,
+    subexercise/within = exercise,
+    subexercise/the-counter = \arabic{exercise}.\roman{subexercise},
+    %
+    subsubsolution/print = true,
+    subsubexercise/within = subexercise,
+    subsubexercise/the-counter = \arabic{exercise}.\roman{subexercise}.\roman{subsubexercise}
+}
+
+\include{xsim-nested}
+\include{xsim-nested-points}
+
+\XSIMNestedPointsSetup{exercise}
+\XSIMNestedPointsSetup{subexercise}
+\XSIMNestedPointsSetup{subsubexercise}
+
+\begin{document}
+
+\gradingtable
+
+\begin{exercise}[
+  subtitle={Erste Aufgabe},
+  points={1+2}
+]
+    Erste Aufgabe
+    \begin{enumerate}
+
+        \begin{subexercise}[points={3}]
+            Erste Unteraufgabe
+        \end{subexercise}
+        \begin{subsolution}
+            Erste Unterlösung
+        \end{subsolution}
+
+        \begin{subexercise}
+            Zweite Unteraufgabe
+        \end{subexercise}
+        \begin{subsolution}
+            Zweite Unterlösung
+        \end{subsolution}
+
+        \begin{subexercise}[points={5}]
+            Dritte Unteraufgabe
+        \end{subexercise}
+        \begin{subsolution}
+            Dritte Unterlösung
+        \end{subsolution}
+
+    \end{enumerate}
+\end{exercise}
+\begin{solution}
+    Erste Lösung
+\end{solution}
+
+\begin{exercise}[
+  subtitle={Zeite Aufgabe}
+]
+    Zweite Aufgabe
+    \begin{enumerate}
+
+        \begin{subexercise}[points={8}]
+            Vierte Unteraufgabe
+        \end{subexercise}
+        \begin{subsolution}
+            Vierte Unterlösung
+        \end{subsolution}
+
+        \begin{subexercise}[points={9}]
+            Fünfte Unteraufgabe
+
+            \begin{enumerate}
+
+                \begin{subsubexercise}[points={1}]
+                    Einundfünfzigste Unteraufgabe
+                \end{subsubexercise}
+                \begin{subsubsolution}
+                    Einundfünfzigste Unterlösung
+                \end{subsubsolution}
+                \begin{subsubexercise}
+                    Zweiundfünfzigste Unteraufgabe
+                \end{subsubexercise}
+                \begin{subsubsolution}
+                    Zweiundfünfzigste Unterlösung
+                \end{subsubsolution}
+                \begin{subsubexercise}[points={3}]
+                    Dreiundfünfzigste Unteraufgabe
+                \end{subsubexercise}
+                \begin{subsubsolution}
+                    Dreiundfünfzigste Unterlösung
+                \end{subsubsolution}
+
+            \end{enumerate}
+
+        \end{subexercise}
+        \begin{subsolution}
+            Fünfte Unterlösung
+        \end{subsolution}
+
+        \begin{subexercise}[points={5+5}]
+            Sechste Unteraufgabe
+        \end{subexercise}
+        \begin{subsolution}
+            Sechste Unterlösung
+        \end{subsolution}
+
+    \end{enumerate}
+\end{exercise}
+\begin{solution}
+    Zweite Lösung
+\end{solution}
+
+\gradingtable
+
+\end{document}

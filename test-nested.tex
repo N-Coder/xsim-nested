@@ -1,0 +1,43 @@
+\documentclass[a4paper]{article}
+
+\usepackage[verbose]{xsim}
+
+\DeclareExerciseEnvironmentTemplate{exercise}{%
+    \par{\GetExerciseName} \GetExerciseProperty{counter} (ID \GetExerciseProperty{id})
+}{%
+    (/ID \GetExerciseProperty{id})
+}
+
+\DeclareExerciseType{subexercise}{
+    exercise-env = subexercise,
+    solution-env = subsolution,
+    exercise-name = subexercise,
+    solution-name = subsolution,
+    exercise-template = exercise,
+    solution-template = exercise
+}
+
+\xsimsetup{
+    exercise/template = exercise,
+    subexercise/within = exercise,
+    subexercise/the-counter = \arabic{exercise}.\roman{subexercise}
+}
+
+% Uncomment to fix the footer-template of outer exercise being executed with a wrong \ExerciseId
+% \include{xsim-nested}
+% \XSIMNestedSetup{exercise}
+% \XSIMNestedSetup{subexercise}
+
+\begin{document}
+
+\begin{exercise}
+    Erste Aufgabe
+    \begin{subexercise}
+        Erste Unteraufgabe
+    \end{subexercise}
+    \begin{subexercise}
+        Zweite Unteraufgabe
+    \end{subexercise}
+\end{exercise}
+
+\end{document}
