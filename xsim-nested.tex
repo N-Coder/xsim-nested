@@ -1,18 +1,31 @@
-\DeclareExerciseProperty{container}      % the container that is the direct parent of an exercise
-\DeclareExerciseProperty{container-type} % its type
+\DeclareExerciseProperty{container}        % the container that is the direct parent of an exercise
+\DeclareExerciseProperty{container-type}   % its type
+\DeclareExerciseProperty{full-counter} % the counter of the exercise, prepended with the counter of its parent
 
 \ExplSyntaxOn
 
-\tl_new:N   \g_xsim_nested_container_tl      % the containe we're nestingcurrently in
+\tl_new:N   \g_xsim_nested_container_tl      % the container we're currently nesting in
 \tl_new:N   \g_xsim_nested_container_type_tl % its type
+
+\tl_new:N   \g_xsim_nested_counter_sep_tl    % the character separating the full counter of child an parent
+\tl_set:Nn  \g_xsim_nested_counter_sep_tl      {.}
 
 % this pre-hook sets the container of the currect exercise using the global container variable
 % and the sets this variable to point to the current exercise (until the post-hook is executed)
 % #1: type
 \cs_new:Nn \xsim_nested_pre_hook:n {
-    \tl_if_empty:NF \g_xsim_nested_container_tl {
+    \tl_if_empty:NTF \g_xsim_nested_container_tl {
+        \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{full-counter}{
+            \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{counter}
+        }
+    }{
         \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{container}{\g_xsim_nested_container_tl}
         \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{container-type}{\g_xsim_nested_container_type_tl}
+        \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{full-counter}{
+            \xsim_get_property:oon{\g_xsim_nested_container_type_tl}{\g_xsim_nested_container_tl}{full-counter}%
+            \g_xsim_nested_counter_sep_tl%
+            \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{counter}
+        }
     }
 
     \tl_gset_eq:NN \g_xsim_nested_container_tl \g_xsim_exercise_id_tl 
