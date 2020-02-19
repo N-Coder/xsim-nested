@@ -18,26 +18,40 @@
 }
 
 \xsimsetup{
+    solution/print = true,
     exercise/template = exercise,
+    subsolution/print = true,
     subexercise/within = exercise,
     subexercise/the-counter = \alph{subexercise}
 }
 
 % Uncomment to fix the footer-template of outer exercise being executed with a wrong \ExerciseId
-% \include{xsim-nested}
-% \XSIMNestedSetup{exercise}
-% \XSIMNestedSetup{subexercise}
+\include{xsim-nested}
+\XSIMNestedSetup{exercise}
+\XSIMNestedSetup{subexercise}
 
 \begin{document}
 
 \begin{exercise}
     Erste Aufgabe
+
     \begin{subexercise}
         Erste Unteraufgabe
     \end{subexercise}
+    \begin{subsolution}
+        Erste Unterlösung
+    \end{subsolution}
+
     \begin{subexercise}
         Zweite Unteraufgabe
     \end{subexercise}
+    \begin{subsolution}
+        Zweite Unterlösung
+    \end{subsolution}
+
 \end{exercise}
+\begin{solution}
+    Erste Lösung
+\end{solution}
 
 \end{document}

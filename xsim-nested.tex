@@ -64,19 +64,25 @@
 \cs_generate_variant:Nn \xsim_nested_post_hook:n {x}
 \NewDocumentCommand \XSIMNestedPostHook {m} {\xsim_nested_post_hook:n{#1}}
 
-% use this to call xsim_setup and register the respectice hooks automatically
+% use this to call xsim_setup and register the respective hooks automatically
 % #1: type (e.g. exercise, subexercise,... needs to be called for each type individually)
-\cs_new:Nn \xsim_nested_setup:n {
+\cs_new:Nn \xsim_nested_setup:nn {
     \xsim_setup:n{
         #1/pre-hook={
             \xsim_nested_pre_hook:n{#1}
         },
-        #1/post-hook={
+        #2/post-hook={
             \xsim_nested_post_hook:n{#1}
         }
     }
 }
-\cs_generate_variant:Nn \xsim_nested_setup:n {x}
-\NewDocumentCommand \XSIMNestedSetup {m} {\xsim_nested_setup:n{#1}}
+\cs_generate_variant:Nn \xsim_nested_setup:nn {xn,nx,xx}
+\NewDocumentCommand \XSIMNestedSetup {mo} {
+    \IfNoValueTF{#2} {
+        \xsim_nested_setup:nx{#1}{\ExerciseParameterGet{#1}{solution-env}}
+    }{
+        \xsim_nested_setup:nn{#1}{#2}
+    }
+}
 
 \ExplSyntaxOff
