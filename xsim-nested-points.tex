@@ -10,7 +10,7 @@
 % this pre-hook resets the 'points-nested-tmp' so that it can be repopulated when the children are read
 % #1: type
 \cs_new:Nn \xsim_nested_points_pre_hook:n {
-    \xsim_unset_property:nxn{#1}{\g_xsim_exercise_id_tl}{points-nested-tmp}
+    \xsim_unset_property:nxn{#1}{\g_xsim_nested_container_tl}{points-nested-tmp}
 }
 \cs_generate_variant:Nn \xsim_nested_points_pre_hook:n {x}
 \NewDocumentCommand \XsimXsamCalcpointsPreHook {m} {\xsim_nested_points_pre_hook:n{#1}}
@@ -22,59 +22,59 @@
 % #1: type
 \cs_new:Nn \xsim_nested_points_post_hook:n {
     % if we have points assigned
-    \xsim_if_property_set:xxnTF{#1}{\g_xsim_exercise_id_tl}{points}{
+    \xsim_if_property_set:xxnTF{#1}{\g_xsim_nested_container_tl}{points}{
         % if we have points-nested-tmp assigned from nested tasks
-        \xsim_if_property_set:xxnTF{#1}{\g_xsim_exercise_id_tl}{points-nested-tmp}{
+        \xsim_if_property_set:xxnTF{#1}{\g_xsim_nested_container_tl}{points-nested-tmp}{
             % sum both to points-sum
-            \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{points-nested}{
-                \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-nested-tmp}
+            \xsim_set_property:xxnx{#1}{\g_xsim_nested_container_tl}{points-nested}{
+                \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-nested-tmp}
             }
-            \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{points-sum}{%
-                \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points} %
+            \xsim_set_property:xxnx{#1}{\g_xsim_nested_container_tl}{points-sum}{%
+                \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points} %
                 + %
-                (\xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-nested})%
+                (\xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-nested})%
             }
         }{
             % else only add our points to the points-nested
-            \xsim_unset_property:nxn{#1}{\g_xsim_exercise_id_tl}{points-nested}
-            \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{points-sum}{%
-                \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points}
+            \xsim_unset_property:nxn{#1}{\g_xsim_nested_container_tl}{points-nested}
+            \xsim_set_property:xxnx{#1}{\g_xsim_nested_container_tl}{points-sum}{%
+                \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points}
             }
         }
     }{
         % else if we have no points
 
         % and if we have points-nested-tmp assigned from nested tasks
-        \xsim_if_property_set:xxnTF{#1}{\g_xsim_exercise_id_tl}{points-nested-tmp}{
+        \xsim_if_property_set:xxnTF{#1}{\g_xsim_nested_container_tl}{points-nested-tmp}{
             % copy them to points-sum
-            \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{points-nested}{
-                \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-nested-tmp}
+            \xsim_set_property:xxnx{#1}{\g_xsim_nested_container_tl}{points-nested}{
+                \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-nested-tmp}
             }
-            \xsim_set_property:xxnx{#1}{\g_xsim_exercise_id_tl}{points-sum}{
-                \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-nested}
+            \xsim_set_property:xxnx{#1}{\g_xsim_nested_container_tl}{points-sum}{
+                \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-nested}
             }
         }{
             % else this subtree has no points
-            \xsim_unset_property:nxn{#1}{\g_xsim_exercise_id_tl}{points-nested}
-            \xsim_unset_property:nxn{#1}{\g_xsim_exercise_id_tl}{points-sum}
+            \xsim_unset_property:nxn{#1}{\g_xsim_nested_container_tl}{points-nested}
+            \xsim_unset_property:nxn{#1}{\g_xsim_nested_container_tl}{points-sum}
         }
     }
 
     % if we have any form of points
-    \xsim_if_property_set:xxnT{#1}{\g_xsim_exercise_id_tl}{points-sum}{
+    \xsim_if_property_set:xxnT{#1}{\g_xsim_nested_container_tl}{points-sum}{
         % if we are in a container
-        \xsim_if_property_set:xxnT{#1}{\g_xsim_exercise_id_tl}{container}{
+        \xsim_if_property_set:xxnT{#1}{\g_xsim_nested_container_tl}{container}{
 
             % save the respective properties (as the global ones currently points to ourself)
-            \xsim_save_property:nxnN{#1}{\g_xsim_exercise_id_tl}{container}\l_xsim_nested_points_cont_tl
-            \xsim_save_property:nxnN{#1}{\g_xsim_exercise_id_tl}{container-type}\l_xsim_nested_points_contt_tl
+            \xsim_save_property:nxnN{#1}{\g_xsim_nested_container_tl}{container}\l_xsim_nested_points_cont_tl
+            \xsim_save_property:nxnN{#1}{\g_xsim_nested_container_tl}{container-type}\l_xsim_nested_points_contt_tl
 
             \xsim_verbose:x {
-                Adding~ Points~ from~ #1 ~ \g_xsim_exercise_id_tl ~~
+                Adding~ Points~ from~ #1 ~ \g_xsim_nested_container_tl ~~
                 to~ \l_xsim_nested_points_contt_tl ~~ \l_xsim_nested_points_cont_tl :~
                 \xsim_get_property:oon{\l_xsim_nested_points_contt_tl}{\l_xsim_nested_points_cont_tl}{points-nested-tmp}
                  ~ + ~ 
-                \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-sum}%
+                \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-sum}%
             }
 
             % if the container already has points-nested-tmp
@@ -83,12 +83,12 @@
                 \xsim_set_property:xxnx{\l_xsim_nested_points_contt_tl}{\l_xsim_nested_points_cont_tl}{points-nested-tmp}{%
                     \xsim_get_property:oon{\l_xsim_nested_points_contt_tl}{\l_xsim_nested_points_cont_tl}{points-nested-tmp} %
                     + %
-                    \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-sum}%
+                    \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-sum}%
                 }
             }{
                 % otherwise initialize the container's points-nested-tmp with our points-sum
                 \xsim_set_property:xxnx{\l_xsim_nested_points_contt_tl}{\l_xsim_nested_points_cont_tl}{points-nested-tmp}{%
-                    \xsim_get_property:non{#1}{\g_xsim_exercise_id_tl}{points-sum}%
+                    \xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{points-sum}%
                 }
             }
         }
@@ -101,25 +101,24 @@
 
 % use this to call xsim_setup and register the respectice hooks automatically
 % #1: type (e.g. exercise, subexercise,... needs to be called for each type individually)
-\cs_new:Nn \xsim_nested_points_setup:nn {
+\cs_new:Nn \xsim_nested_points_setup:n {
     \xsim_setup:n{
         #1/pre-hook={
             \xsim_nested_pre_hook:n{#1}
             \xsim_nested_points_pre_hook:n{#1}
         },
-        #2/post-hook={
+        #1/end-hook={
+            \xsim_nested_end_hook:n{#1}
+        },
+        #1/post-hook={
             \xsim_nested_points_post_hook:n{#1}
             \xsim_nested_post_hook:n{#1}
         }
     }
 }
-\cs_generate_variant:Nn \xsim_nested_points_setup:nn {xn,nx,xx}
-\NewDocumentCommand \XSIMNestedPointsSetup {mo} {
-    \IfNoValueTF{#2} {
-        \xsim_nested_points_setup:nx{#1}{\ExerciseParameterGet{#1}{solution-env}}
-    }{
-        \xsim_nested_points_setup:nn{#1}{#2}
-    }
+\cs_generate_variant:Nn \xsim_nested_points_setup:nn {x}
+\NewDocumentCommand \XSIMNestedPointsSetup {m} {
+    \xsim_nested_points_setup:n{#1}
 }
 
 \ExplSyntaxOff

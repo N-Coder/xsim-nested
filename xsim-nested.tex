@@ -34,14 +34,24 @@
 \cs_generate_variant:Nn \xsim_nested_pre_hook:n {x}
 \NewDocumentCommand \XSIMNestedPreHook {m} {\xsim_nested_pre_hook:n{#1}}
 
-% this post-hook reverts the changes made by the pre-hook, popping one level of nesting off the stack
-% additionally, it correctly reverts XSIM internals so that footer-templates have the correct \ExerciseID
+% this end-hook reverts XSIM internals so that end-templates have the correct \ExerciseID when the exercise contained nested children
 % #1: type
-\cs_new:Nn \xsim_nested_post_hook:n {
+\cs_new:Nn \xsim_nested_end_hook:n {
     \xsim_verbose:x {
         Resetting~ #1 ~ context~ from~ \g_xsim_nested_container_type_tl ~ \g_xsim_nested_container_tl ~ (globally~ set~ \g_xsim_exercise_id_tl ~ =~ \ExerciseType ~ \ExerciseID )...
     }
 
+    % update XSIM internals
+    \tl_gset_eq:NN \g_xsim_exercise_id_tl \g_xsim_nested_container_tl
+    \tl_gset_eq:NN \ExerciseID \g_xsim_exercise_id_tl
+    \tl_gset_eq:NN \ExerciseType \g_xsim_nested_container_type_tl
+}
+\cs_generate_variant:Nn \xsim_nested_end_hook:n {x}
+\NewDocumentCommand \XSIMNestedEndHook {m} {\xsim_nested_end_hook:n{#1}}
+
+% this post-hook reverts the changes made by the pre-hook, popping one level of nesting off the stack
+% #1: type
+\cs_new:Nn \xsim_nested_post_hook:n {
     \xsim_if_property_set:xxnTF{#1}{\g_xsim_nested_container_tl}{container}{
         % reset the global container variable to be equal to the container of the parent
         \tl_gset:Nx \g_xsim_nested_container_type_tl {\xsim_get_property:non{#1}{\g_xsim_nested_container_tl}{container-type}}
@@ -52,11 +62,6 @@
         \tl_gclear:N \g_xsim_nested_container_type_tl
     }
 
-    % update XSIM internals
-    \tl_gset_eq:NN \g_xsim_exercise_id_tl \g_xsim_nested_container_tl
-    \tl_gset_eq:NN \ExerciseID \g_xsim_exercise_id_tl
-    \tl_gset_eq:NN \ExerciseType \g_xsim_nested_container_type_tl
-
     \xsim_verbose:x {
         ...to~ \g_xsim_nested_container_type_tl ~ \g_xsim_nested_container_tl ~ (globally~ set~ \g_xsim_exercise_id_tl ~ =~ \ExerciseType ~ \ExerciseID ).
     }
@@ -66,23 +71,22 @@
 
 % use this to call xsim_setup and register the respective hooks automatically
 % #1: type (e.g. exercise, subexercise,... needs to be called for each type individually)
-\cs_new:Nn \xsim_nested_setup:nn {
+\cs_new:Nn \xsim_nested_setup:n {
     \xsim_setup:n{
         #1/pre-hook={
             \xsim_nested_pre_hook:n{#1}
         },
-        #2/post-hook={
+        #1/end-hook={
+            \xsim_nested_end_hook:n{#1}
+        },
+        #1/post-hook={
             \xsim_nested_post_hook:n{#1}
         }
     }
 }
-\cs_generate_variant:Nn \xsim_nested_setup:nn {xn,nx,xx}
-\NewDocumentCommand \XSIMNestedSetup {mo} {
-    \IfNoValueTF{#2} {
-        \xsim_nested_setup:nx{#1}{\ExerciseParameterGet{#1}{solution-env}}
-    }{
-        \xsim_nested_setup:nn{#1}{#2}
-    }
+\cs_generate_variant:Nn \xsim_nested_setup:n {x}
+\NewDocumentCommand \XSIMNestedSetup {m} {
+    \xsim_nested_setup:n{#1}
 }
 
 \ExplSyntaxOff
