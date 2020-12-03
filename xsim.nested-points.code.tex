@@ -68,8 +68,8 @@
         \xsim_if_property_set:xxnT{#1}{\g_xsim_nested_container_tl}{container}{
 
             % save the respective properties (as the global ones currently points to ourself)
-            \xsim_save_property:nxnN{#1}{\g_xsim_nested_container_tl}{container}\l_xsim_nested_points_cont_tl
-            \xsim_save_property:nxnN{#1}{\g_xsim_nested_container_tl}{container-type}\l_xsim_nested_points_contt_tl
+            \tl_set:Nx \l_xsim_nested_points_cont_tl  {\xsim_get_property:nVn{#1}{\g_xsim_nested_container_tl}{container}}
+            \tl_set:Nx \l_xsim_nested_points_contt_tl {\xsim_get_property:nVn{#1}{\g_xsim_nested_container_tl}{container-type}}
 
             \xsim_verbose:x {
                 Adding~ Points~ from~ #1 ~ \g_xsim_nested_container_tl ~~
