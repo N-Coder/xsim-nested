@@ -9,20 +9,18 @@
         \GetExerciseProperty{counter}%
         \normalfont%
         \GetExercisePropertyT{subtitle}{ {\itshape\PropertyValue}}%
-        \nobreakspace(\GetExercisePropertyTF{points-sum}{\printgoal{\PropertyValue}}{???}~\XSIMtranslate {point-abbr})%
-        (ID \GetExerciseProperty{container}.\GetExerciseProperty{id})
+        \nobreakspace($\GetExercisePropertyTF{points-sum}{\PropertyValue=\printgoal{\PropertyValue}}{???}$~\XSIMtranslate {point-abbr})%
+        (ID \GetExerciseProperty{id})
     }
-}{%
-    (ID \GetExerciseProperty{container}.\GetExerciseProperty{id} -- \GetExerciseProperty{points-sum}~\XSIMtranslate {point-abbr})
-}
+}{}
 
 \DeclareExerciseEnvironmentTemplate{subexe}{%
-    \item[(\GetExerciseProperty{counter})] %
+    \item[(\GetExerciseProperty{full-counter})] %
     \GetExercisePropertyT{points}{%
         (\printgoal{\PropertyValue}~\XSIMtranslate{point-abbr})%
     } %
-    (ID \GetExerciseProperty{container} . \GetExerciseProperty{id})
-}{(/ID \GetExerciseProperty{container} . \GetExerciseProperty{id})}
+    (ID $\GetExercisePropertyT{container}{\PropertyValue.}\GetExerciseProperty{id}$)
+}{}
 
 \DeclareExerciseType{subexercise}{
     exercise-env = subexercise,
@@ -56,8 +54,8 @@
     subsubexercise/the-counter = \roman{subsubexercise}
 }
 
-\include{xsim-nested}
-\include{xsim-nested-points}
+\include{xsim.nested.code}
+\include{xsim.nested-points.code}
 
 \XSIMNestedPointsSetup{exercise}
 \XSIMNestedPointsSetup{subexercise}
@@ -157,7 +155,5 @@
 \begin{solution}
     Zweite Lösung
 \end{solution}
-
-\gradingtable
 
 \end{document}

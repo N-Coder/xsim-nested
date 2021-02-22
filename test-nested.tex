@@ -2,31 +2,33 @@
 
 \usepackage[verbose]{xsim}
 
-\DeclareExerciseEnvironmentTemplate{exercise}{%
-    \par{\GetExerciseName} \GetExerciseProperty{counter} (ID \GetExerciseProperty{id})
-}{%
-    (/ID \GetExerciseProperty{id})
-}
+\DeclareExerciseEnvironmentTemplate{exercise}{
+    \section*{\GetExerciseName\ \GetExerciseProperty{full-counter}\ (ID\ \GetExerciseProperty{id})}
+}{}
+\DeclareExerciseEnvironmentTemplate{subexercise}{
+    \subsection*{\GetExerciseName\ \GetExerciseProperty{full-counter}\ (ID\ \GetExerciseProperty{id})}
+}{}
 
 \DeclareExerciseType{subexercise}{
     exercise-env = subexercise,
     solution-env = subsolution,
     exercise-name = subexercise,
     solution-name = subsolution,
-    exercise-template = exercise,
-    solution-template = exercise
+    exercise-template = subexercise,
+    solution-template = subexercise
 }
 
 \xsimsetup{
     solution/print = true,
     exercise/template = exercise,
+    solution/template = exercise,
     subsolution/print = true,
     subexercise/within = exercise,
     subexercise/the-counter = \alph{subexercise}
 }
 
-% Uncomment to fix the footer-template of outer exercise being executed with a wrong \ExerciseId
-\include{xsim-nested}
+\include{xsim.nested.code}
+
 \XSIMNestedSetup{exercise}
 \XSIMNestedSetup{subexercise}
 
@@ -52,6 +54,13 @@
 \end{exercise}
 \begin{solution}
     Erste Lösung
+\end{solution}
+
+\begin{exercise}
+    Zweite Aufgabe
+\end{exercise}
+\begin{solution}
+    Zweite Lösung
 \end{solution}
 
 \end{document}
