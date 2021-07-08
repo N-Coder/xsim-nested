@@ -1,4 +1,4 @@
-% \XSIMmodule{nested}{hooks to fix and properly support nesting of exercises}
+\XSIMmodule{nested}{hooks to fix and properly support nesting of exercises}
 
 \DeclareExerciseProperty{container}          % the container that is the direct parent of an exercise
 \DeclareExerciseProperty{container-type}     % its type
@@ -42,18 +42,15 @@
     \tl_gset_eq:NN \g_xsim_exercise_id_tl \l_xsim_nested_container_tl
 }
 
-% use this to call xsim_setup and register the respective hook automatically
+% use this to register the respective hooks automatically
 % #1: type (e.g. exercise, subexercise,... needs to be called for each type individually)
-\cs_new:Nn \xsim_nested_setup:n {
-    \xsim_setup:n{
-        #1/pre-hook={
-            \xsim_nested_pre_hook:n{#1}
-        },
-        #1/end-hook={
-            \xsim_nested_end_hook:n{#1}
-        }
+\NewDocumentCommand \XSIMNestedSetup {m} {
+    \XSIMaddtohook{#1}{exercise}{begin}{
+        \xsim_nested_pre_hook:n{#1}
+    }
+    \XSIMaddtohook{#1}{exercise}{end}{
+        \xsim_nested_end_hook:n{#1}
     }
 }
-\NewDocumentCommand \XSIMNestedSetup {m} {\xsim_nested_setup:n{#1}}
 
 \ExplSyntaxOff

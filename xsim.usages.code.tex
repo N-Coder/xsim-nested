@@ -1,0 +1,104 @@
+\XSIMmodule{usages}{track which exercises were used on which sheets}
+
+\RequirePackage[abspath]{currfile}
+
+\ExplSyntaxOn
+\int_new:N \l_xsim_usages_index_int
+\int_new:N \g_xsim_usages_index_int
+\clist_new:N \g_xsim_usages_collected_clist
+
+\clist_new:N \l_xsim_usages_loaded_clist
+\ior_new:N \l_xsim_usages_readback_ior
+
+\DeclareExerciseProperty!{usage-id}
+\DeclareExerciseProperty{usages}
+
+
+\msg_new:nnn {xsim} {used-exercise-not-found} {
+  While~ scanning~ #1~ (#2),~ couldn't~ find~ exercise~ #3!
+}
+\msg_new:nnn {xsim} {defined-exercise-not-used} {
+  Exercise~ type~ #1~ #2 is unused!
+}
+
+
+\AtBeginOfEveryFile{
+  \int_set_eq:NN \l_xsim_usages_index_int \g_xsim_usages_index_int
+  \int_gzero:N \g_xsim_usages_index_int
+}
+
+\AtEndOfEveryFile{
+  \int_set_eq:NN \g_xsim_usages_index_int \l_xsim_usages_index_int
+}
+
+\NewDocumentCommand \XSIMUsagesSetup {m} {
+  \XSIMaddtohook{#1}{exercise}{pre}{
+    % \ifcurrfileabspath{}{\SetExerciseProperty{filepath}{\currfileabspath}}{\SetExerciseProperty{filepath}{\currfilepath}}
+    \SetExpandedExerciseProperty{usage-id}{{\ExerciseType}{\currfileabspath}:{\int_use:N \g_xsim_usages_index_int}}
+    \int_gincr:N \g_xsim_usages_index_int
+  }
+
+  \XSIMaddtohook{#1}{exercise}{begin}{
+    \tl_set:Nx \l_tmpa_tl {\GetExerciseProperty{id}}
+    \tl_set:Nx \l_tmpb_tl {\GetExerciseProperty{ID}} % user ID
+    \tl_if_eq:NNTF \l_tmpa_tl \l_tmpb_tl {
+      \clist_gput_right:Nx \g_xsim_usages_collected_clist {\GetExerciseProperty{usage-id}}
+    }{
+      \clist_gput_right:NV \g_xsim_usages_collected_clist \l_tmpb_tl
+    }
+  }
+}
+
+\XSIMatenddocument{
+  \newwrite\xsimusages
+  \immediate\openout\xsimusages=\jobname.xsimusages
+  \immediate\write\xsimusages{\clist_use:Nn \g_xsim_usages_collected_clist ,}
+  \pdfinfo{
+    /XSIMUsages (\clist_use:Nn \g_xsim_usages_collected_clist ,)
+  }
+}
+
+\cs_new:Nn \xsim_usages_load:nn {
+  \clist_gclear:N \l_xsim_usages_loaded_clist
+
+  \ior_open:Nn \l_xsim_usages_readback_ior {#1}
+  \ior_map_inline:Nn \l_xsim_usages_readback_ior {\clist_gput_right:Nn \l_xsim_usages_loaded_clist {##1}}
+  \ior_close:N \l_xsim_usages_readback_ior
+
+  \clist_map_inline:Nn \l_xsim_usages_loaded_clist {
+    \tl_set:Nx \ExerciseType {\GetExerciseTypeForProperty{usage-id}{##1}}
+    \tl_set:Nx \ExerciseID {\GetExerciseIdForProperty{usage-id}{##1}}
+    \tl_if_empty:NT \ExerciseID {
+      \tl_set:Nx \ExerciseType {\GetExerciseTypeForProperty{ID}{##1}}
+      \tl_set:Nx \ExerciseID {\GetExerciseIdForProperty{ID}{##1}}
+    }
+    \tl_if_empty:NTF \ExerciseID {
+      \msg_warning:nnnnn {xsim} {used-exercise-not-found} {#1} {#2} {##1}
+    }{
+      \clist_clear:N \l_tmpa_clist
+      \clist_put_right:Nx \l_tmpa_clist {\GetExerciseProperty{usages}}
+      \clist_put_right:Nn \l_tmpa_clist {#2}
+      \SetExpandedExerciseProperty {usages} {\clist_use:Nn \l_tmpa_clist {,}}
+    }
+  }
+}
+
+\NewDocumentCommand \LoadUsages {mm}
+  { \xsim_usages_load:nn {#1} {#2} }
+
+\NewDocumentCommand \PrintUsages {m} {
+  \clist_clear:N \l_tmpa_clist
+  \clist_put_right:Nx \l_tmpa_clist {\GetExerciseProperty{usages}}
+  \clist_use:Nn \l_tmpa_clist {#1}
+}
+
+\NewDocumentCommand \ResetUsages {} {
+  \ForEachUsedExerciseByID {
+    % \ExerciseGetPropertyF{#1}{#2}{usages}{
+    %   \msg_warning:nnnnn {xsim} {defined-exercise-not-used} {#1} {#2}
+    % }
+    \ExerciseSetProperty{##1}{##2}{usages}{}
+  }
+}
+
+\ExplSyntaxOff

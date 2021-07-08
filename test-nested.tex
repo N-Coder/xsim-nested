@@ -1,6 +1,7 @@
 \documentclass[a4paper]{article}
 
 \usepackage[verbose]{xsim}
+\usepackage{xsim-utils}
 
 \DeclareExerciseEnvironmentTemplate{exercise}{
     \section*{\GetExerciseName\ \GetExerciseProperty{full-counter}\ (ID\ \GetExerciseProperty{id})}
@@ -27,7 +28,7 @@
     subexercise/the-counter = \alph{subexercise}
 }
 
-\include{xsim.nested.code}
+\XSIMloadmodules{nested}
 
 \XSIMNestedSetup{exercise}
 \XSIMNestedSetup{subexercise}

@@ -1,6 +1,7 @@
 \documentclass[a4paper]{article}
 
 \usepackage[verbose]{xsim}
+\usepackage{xsim-utils}
 
 
 \DeclareExerciseEnvironmentTemplate{exe}{%
@@ -54,10 +55,9 @@
     subsubexercise/the-counter = \roman{subsubexercise}
 }
 
-\include{xsim.nested.code}
-\include{xsim.nested-points.code}
+\XSIMloadmodules{nested,nested-points}
 
-\XSIMNestedPointsSetup{exercise}
+\XSIMNestedPointsSetup[points]{exercise}
 \XSIMNestedPointsSetup{subexercise}
 \XSIMNestedPointsSetup{subsubexercise}
 

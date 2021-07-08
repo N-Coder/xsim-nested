@@ -1,0 +1,39 @@
+\RequirePackage {xsim}
+
+\ExplSyntaxOn
+
+\tl_const:Nn \c_xsimu_date_tl                 {2021/03/30}
+\tl_const:Nn \c_xsimu_version_major_number_tl {0}
+\tl_const:Nn \c_xsimu_version_minor_number_tl {1}
+\tl_const:Nn \c_xsimu_version_subrelease_tl   {0}
+\tl_const:Nx \c_xsimu_version_number_tl
+  {
+    \c_xsimu_version_major_number_tl .
+    \c_xsimu_version_minor_number_tl
+  }
+\tl_const:Nx \c_xsimu_version_tl
+  {
+    \c_xsimu_version_number_tl
+    \c_xsimu_version_subrelease_tl
+  }
+\tl_const:Nn \c_xsimu_info_tl {Utils ~ for ~ xsim ~ (eXercise ~ Sheets ~ IMproved)}
+
+\ProvidesExplPackage
+  {xsim-utils}
+  {\c_xsimu_date_tl}
+  {\c_xsimu_version_tl}
+  {\c_xsimu_info_tl}
+
+% --------------------------------------------------------------------------
+
+% #1: type
+% #2: exercise|solution
+% #3: hook
+% #4: code
+\NewDocumentCommand \XSIMsethook {mmmm}
+  { \xsim_set_hook:nnnn {#1} {#2} {#3} {#4} }
+\NewDocumentCommand \XSIMaddtohook {mmmm}
+  { \xsim_addto_hook:nnnn {#1} {#2} {#3} {#4} }
+
+\NewDocumentCommand \XSIMloadmodules {m}
+  { \clist_map_inline:nn {#1} { \xsim_load_module:n {##1} } }
