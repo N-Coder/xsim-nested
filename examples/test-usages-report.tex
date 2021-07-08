@@ -1,0 +1,33 @@
+\documentclass[a4paper]{article}
+
+\usepackage{xsim-utils}
+\XSIMloadmodules{usages}
+\XSIMUsagesSetup{exercise}
+
+\DeclareExerciseEnvironmentTemplate{usages}{
+  \section*{Exercise \nobreakspace \GetExerciseProperty{id} \nobreakspace (\GetExerciseProperty{ID})}
+}{
+  \subsection*{Usages}
+  \begin{enumerate}
+  \item \PrintUsages{\item }
+  \end{enumerate}
+}
+
+\xsimsetup{
+  exercise/template = usages
+}
+
+\begin{document}
+
+\input{taskdb/task1}
+\input{taskdb/task2}
+\input{taskdb/task3}
+\input{taskdb/task4}
+
+{\ResetUsages{}}
+
+\LoadUsages{.cache/test-usages-ex1.xsimusages}{Test1}
+\LoadUsages{.cache/test-usages-ex2.xsimusages}{Test2}
+\LoadUsages{.cache/test-usages-ex3.xsimusages}{Test3}
+
+\end{document}
